@@ -11,6 +11,7 @@ class Game {
       winner: null,
       losers: []
     };
+    this.isOver = false;
   }
 
   // раздать карты
@@ -88,6 +89,7 @@ class Game {
       this.result.losers.push(this.user);
       this.result.losers.push(this.croupier);
     }
+    this.isOver = true;
   }
 
   // завершить раунд

@@ -112,34 +112,19 @@ class GameLog {
   }
 
   showLastGameWinnerInfo() {
-    let result = {
-      isDrow: true,
-      winner: null
-    };
-
     if (this.data.isDrow) {
       console.log("No winner, it was drow.");
     } else {
       console.log(
-        `Winer: ${
-          this.data.winner.status
-        } ${this.data.winner.getStats()} with ${this.data.winner.points} points`
+        `Winer: ${this.data.winner.status} ${this.data.winner.getStats()}`
       );
     }
-
-    return result;
   }
 
   showLastGameLosersInfo() {
     this.data.losers.forEach(loser => {
-      console.log(
-        `Loser: ${this.data.loser.status} ${this.data.loser.getStats()} with ${
-          this.data.loser.points
-        } points`
-      );
+      console.log(`Loser: ${loser.status} ${loser.getStats()}`);
     });
-
-    return result;
   }
 }
 

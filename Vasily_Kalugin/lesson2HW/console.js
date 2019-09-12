@@ -16,14 +16,17 @@ const GLOBAL = {
   logPath: path.join(__dirname, "game.log.json"),
   argv: minimist(process.argv.slice(2)),
   userName: "Vasiy",
-  logs: null
+  logs: [],
+  currentlog: new GameLog({})
 };
 
 function initGame() {
   news.hello();
   rl.question(news.nameQuestion, userName => {
-    GLOBAL.userName = userName;
-    letNewGame(userName);
+    if (userName) {
+      GLOBAL.userName = userName;
+    }
+    letNewGame(GLOBAL.userName);
   });
 }
 
@@ -35,16 +38,20 @@ function letNewGame(userName) {
 }
 
 function createLog(gameLog, gameStats) {
-  console.log(gameLog);
   gameLog.update(gameStats);
-  console.log(gameLog);
-  gameLog.showLastGameWinnerInfo();
-  gameLog.showLastGameLosersInfo();
-
-  if (GLOBAL.logs !== null) {
-    GLOBAL.logs.push(gameLog.data);
-    fs.writeFile(GLOBAL.logPath, JSON.stringify());
-  }
+  news.gameResult(
+    gameLog.showLastGameWinnerInfo.bind(gameLog),
+    gameLog.showLastGameLosersInfo.bind(gameLog)
+  );
+  news.gameIsOver();
+  GLOBAL.logs.push(gameLog);
+  fs.writeFile(GLOBAL.logPath, JSON.stringify(GLOBAL.logs), "utf-8", err => {
+    if (err) {
+      news.logNotRecorded();
+    } else {
+      news.logRecorded();
+    }
+  });
 }
 
 function getLogs() {
@@ -58,7 +65,7 @@ function getLogs() {
 
       if (data) {
         GLOBAL.logs = JSON.parse(data);
-        if (gameLog.length) {
+        if (GLOBAL.logs.length) {
           GLOBAL.logs.sort((a, b) => (b.id < a.id) - (a.id < b.id));
           res = new GameLog(GLOBAL.logs[GLOBAL.logs.length - 1]);
         }
@@ -76,20 +83,28 @@ function gameEngine(gameLog) {
         letNewGame(GLOBAL.userName);
         break;
       case "get":
-        GLOBAL.game.finishRound();
+        if (!GLOBAL.game.isOver) {
+          GLOBAL.game.finishRound();
 
-        if (GLOBAL.game.isEndGame()) {
-          createLog(gameLog, GLOBAL.game.getGameStats());
+          if (GLOBAL.game.isEndGame()) {
+            createLog(GLOBAL.currentlog, GLOBAL.game.getGameStats());
+          } else {
+            console.log("");
+            console.log(GLOBAL.game.getUserStats());
+          }
         } else {
-          console.log("");
-          console.log(GLOBAL.game.getUserStats());
+          news.gameIsOver();
         }
 
         break;
       case "skip":
-        GLOBAL.game.user.skip();
-        GLOBAL.game.finishRound();
-        createLog(gameLog, GLOBAL.game.getGameStats());
+        if (!GLOBAL.game.isOver) {
+          GLOBAL.game.user.skip();
+          GLOBAL.game.finishRound();
+          createLog(GLOBAL.currentlog, GLOBAL.game.getGameStats());
+        } else {
+          news.gameIsOver();
+        }
         break;
       case "exit":
         news.exit();
@@ -104,10 +119,9 @@ function gameEngine(gameLog) {
 }
 
 async function startProgram() {
-  let gameLog = new GameLog({});
-  gameEngine(gameLog);
+  gameEngine(GLOBAL.currentlog);
   initGame();
-  gameLog = await getLogs();
+  GLOBAL.currentlog = await getLogs();
 }
 
 startProgram();
