@@ -1,5 +1,6 @@
 const readline = require('readline');
-const _ = require('lodash');
+const _  = require('lodash');
+const fs = require('fs');
 
 var player = {
     'name' : '',
@@ -10,10 +11,11 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
 });
-console.log("Добро пожаловать в игру 'Больше меньше' \nдля прекращения игры в любой момент наберите exit");
+
+console.log("Добро пожаловать в игру 'Больше меньше' \nдля прекращения игры в любой момент игры наберите exit\n");
 
 function hello() {
-    const promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         rl.question('Представьтесь: ', (name) => {
             if(name === 'exit')
                 reject();
@@ -21,9 +23,24 @@ function hello() {
 
         });
     });
-
-    return promise;
 }
+
+function rules() {
+    return new Promise((resolve, reject) => {
+        rl.question('Введите условие > или < 5: ', (conditional) => {
+            if(conditional === 'exit')
+                reject();
+
+            if(conditional !== '<' && conditional !== '>'){
+                return startGame();
+            }
+
+            resolve(conditional);
+        });
+    });
+
+}
+
 
 function game(rules) {
     let randomScore = _.random(1, 10);
@@ -36,32 +53,27 @@ function game(rules) {
         player.lose++;
     }
 
+    saveLogs(player, logic);
+
     console.log("----------------");
-
     console.log("Выпало: ", randomScore);
-
 
     return player;
 
 }
 
-function rules() {
-    const promise = new Promise((resolve, reject) => {
-        rl.question('Введите условие > или < 5: ', (conditional) => {
-            if(conditional === 'exit')
-                reject();
+function saveLogs(player, result){
 
-            if(conditional !== '<' && conditional !== '>'){
-                return rules();
-            }
-
-            resolve(conditional);
-
-        });
+    let log = JSON.stringify({
+        player: player.name,
+        result: result,
+        time: new Date(),
     });
 
-    return promise;
-
+    let path = './logs/gameLog.log';
+    fs.appendFile(path, log+',', function (err) {
+        if (err) throw err;
+    });
 }
 
 async function startGame() {
@@ -81,10 +93,9 @@ async function startGame() {
 
 
     } catch (error) {
-        // console.log(error);
+        console.log("\nЗавершение игры!");
         rl.close();
     }
-
 }
 
 startGame();
