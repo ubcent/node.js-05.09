@@ -1,0 +1,16 @@
+{
+  "name": "batvale1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "boxen": "^4.1.0",
+    "i": "^0.3.6",
+    "minimist": "^1.2.0"
+  }
+}

@@ -85,7 +85,7 @@ function player2Turn() {
 
 function logStats(winner) {
     return new Promise((resolve) => {
-        let logPath = "./batvale1/statistics.json";
+        let logPath = "./statistics.json";
         fs.readFile(logPath, "utf8", (err, data) => {
             let dataToLog = JSON.parse(data);
             if (err) {
@@ -132,7 +132,7 @@ function logStats(winner) {
 
 function displayStats() {
     return new Promise((resolve) => {
-        let logPath = "./batvale1/statistics.json";
+        let logPath = "./statistics.json";
         fs.readFile(logPath, "utf8", (err, data) => {
             let dataToLog = JSON.parse(data);
             console.log('The total games have been played: ' + dataToLog.gamesPlayed + '.');
