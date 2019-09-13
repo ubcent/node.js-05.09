@@ -12,6 +12,6 @@ request('https://dota2.ru/', (err, response, body) => {
             console.log(i + 1 + '. ' + news.eq(i).text());
         }
     }
-})
+});
 
 

@@ -35,4 +35,4 @@ function getTranslation(wordToTranslate) {
     );
 }
 
-translation();
+translation()
