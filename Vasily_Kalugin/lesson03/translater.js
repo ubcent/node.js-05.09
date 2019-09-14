@@ -45,8 +45,8 @@ function getTranslable() {
 async function letTranslate() {
     const translatableText = await getTranslable();
     const translatedText = await getTranslation(translatableText);
-    await console.log(translatedText);
-    await letTranslate();
+    console.log(translatedText);
+    letTranslate();
 }
 
 letTranslate();
