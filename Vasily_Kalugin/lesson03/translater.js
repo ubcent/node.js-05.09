@@ -33,9 +33,9 @@ function getTranslation(text) {
 }
 
 function getTranslable() {
-    const promiss = new Promise((p_res, p_rej) => {
+    const promiss = new Promise((pRes, pRej) => {
         rl.question('Write words to translate: ', answer => {
-            p_res(answer);
+            pRes(answer);
         });
     });
 
