@@ -14,23 +14,7 @@ const program = () => {
 
 			$('.job').each(function() {
 				const job = $(this).find('.inner');
-
-				console.log(
-					job.children('.date').text() + '\n' +
-					job.children('.info').text() + '\n' +
-					job.find('.salary').text() + '\n'
-					);
-
-				/*
-					как вывести содержимое '.info' без '.salary'
-					('.salary' - последний дочерний элемент в '.info')
-					так и не понял, пробовал not() и nextUntil(), не получилось:  
-
-					job.children('.info').not('.salary').text();
-					job.children('.info').nextUntil('.salary').text();
-					job.children('.info').nextUntil('.v2').text();	- элемент '.v2' стоит перед '.salary'
-				*/
-
+				console.log(`${job.children('.date').text()}\n${job.find('.title').text()}\n${job.find('.salary').text()}\n`);
 			});
 
 		} else if (err) {
