@@ -14,7 +14,7 @@ rl.on('line', (line) => {
                 console.log('Ошибка: ', err);
             } else if (!err && response.statusCode === 200) {
                 let translate = JSON.parse(body);
-                console.log('Перевод: ' + '\r\n' + translate.text[0]);
+                console.log(`Перевод:\n${translate.text[0]}`);
             }
         })
 });
