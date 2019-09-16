@@ -1,18 +1,23 @@
 {
-  "name": "kornykhina_a",
+
+  "name": "Kornykhina_A",
   "version": "1.0.0",
   "description": "",
-  "main": "game.js",
+  "main": "parser.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
+
   "author": "",
   "license": "ISC",
   "dependencies": {
     "boxen": "^4.1.0",
-    "minimist": "^1.2.0",
-    "node-fetch": "^2.6.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+
+    "cheerio": "^1.0.0-rc.3",
+    "iconv": "^2.3.4",
+    "iconv-lite": "^0.5.0",
+    "request": "^2.88.0"
+
   }
 }
