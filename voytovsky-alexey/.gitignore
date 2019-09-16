@@ -1,0 +1,9 @@
+# Dependencies
+node_modules/
+
+# VS Code settings
+gbnodejs.code-workspace
+.vscode
+
+# My own
+other/
