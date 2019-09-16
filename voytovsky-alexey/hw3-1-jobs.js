@@ -12,8 +12,8 @@ const program = () => {
 
 			console.log('\nВакансии со знанием технологии Node.js в Москве по данным сервиса "Мой круг":\n\n');
 
-			$('.show_marked').children('.job').each(function() {
-				let job = $(this).find('.inner');
+			$('.job').each(function() {
+				const job = $(this).find('.inner');
 
 				console.log(
 					job.children('.date').text() + '\n' +
