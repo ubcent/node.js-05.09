@@ -1,0 +1,11 @@
+<div class="user">
+  <h2>{{fullName}}</h2>
+  {{#if error}}
+    <h2>Ай ай! Ошибка!</h2>
+  {{/if}}
+  <ul>
+    {{#each achievements}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+</div>
