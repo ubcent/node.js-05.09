@@ -1,0 +1,35 @@
+<a href="/">назад</a>
+
+<h1>Статьи:</h1>
+<form action="" method="get">
+    <label for="name">Название статьи</label>
+    <input type="text" id="name" name="name" value="{{ filter.name }}">
+
+    <label for="count">Количество тем</label>
+    <select name="count" id="count">
+        <option value="5" {% if(filter.count == 5) %} selected {% endif %}>
+            5
+        </option>
+        <option value="10" {% if(filter.count == 10) %} selected {% endif %}>
+            10
+        </option>
+        <option value="20" {% if(filter.count == 20) %} selected {% endif %}>
+            20
+        </option>
+        <option value="all" {% if(filter.count == "all") %} selected {% endif %}>
+            Все
+        </option>
+    </select>
+
+    <input type="submit" value="Фильтровать">
+
+</form>
+<ul>
+    {% for t in articles %}
+        <li>
+            <a href="{{ t.link }}" target="_blank">
+                {{ t.title }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
