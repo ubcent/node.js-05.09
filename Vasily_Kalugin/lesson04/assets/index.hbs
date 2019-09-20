@@ -35,7 +35,16 @@
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify({ newsOnPage }),
+        });
+
+        const ul = document.querySelector('ul');
+        const newsTitles = await res.json();
+        let newsTitlesInner = '';
+
+        newsTitles.forEach((newsTitle) => {
+            newsTitlesInner = `${newsTitlesInner}<li>${newsTitle}</li>`;
         })
+        ul.innerHTML = newsTitlesInner;
     }
 </script>
 

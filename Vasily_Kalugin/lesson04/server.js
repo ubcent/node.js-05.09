@@ -41,28 +41,24 @@ function getNewsTitles(newsOnPage) {
 app.engine('hbs', consolidate.handlebars);
 app.use(express.json());
 
-app.use('/', (req, res, next) => {
+app.use('/', async (req, res, next) => {
     const { newsOnPage = 4 } = req.body;
-    getNewsTitles(parseInt(newsOnPage)).then(
-        newsTitles => {
-            if (req.body.newsOnPage) {
-                console.log(newsTitles);
-                res.render(indexPath, { newsTitles });
-            } else {
-                req.body.newsTitles = newsTitles;
-                next();
-            }
-        },
-        err => {
-            res.render(indexPath, { err });
-        },
-    );
+    const newsTitles = await getNewsTitles(parseInt(newsOnPage));
+
+    req.body.newsTitles = newsTitles;
+    next();
 });
 
 app.get('/', (req, res) => {
     const { newsTitles } = req.body;
 
     res.render(indexPath, { newsTitles });
+});
+
+app.post('/', (req, res) => {
+    const { newsTitles } = req.body;
+
+    res.json(newsTitles);
 });
 
 app.listen(9001, () => {
