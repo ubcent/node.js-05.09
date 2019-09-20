@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home work</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <style>
+        #app {
+            width: 700px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .tasks {
+            margin-top: 20px;
+        }
+
+        .task_block {
+            padding: 10px;
+            border: 1px solid grey;
+            margin: 2px;
+            width: 100%;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .done {
+             background-color: #c8ffc8;
+             transition: background-color 1s;
+             animation: fade-in 0.5s ease-in forwards;
+         }
+
+        .undone {
+            background-color: #fffecc;
+            transition: background-color 1s;
+            animation: fade-in 0.5s ease-out forwards;
+        }
+
+        .my_animation-enter {
+            opacity: 0;
+        }
+
+        .my_animation-enter-active {
+            animation: fade-in 0.5s ease-out forwards;
+            transition: opacity 0.5s;
+        }
+
+        .my_animation-leave-active {
+            animation: fade-out 1s ease-out forwards;
+            transition: opacity 1s;
+            opacity: 0;
+            position: absolute;
+        }
+
+        .my_animation-move {
+            transition: transform 1s;
+        }
+
+        .actions_add_edit {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            min-width: 100px;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="tasks_list">
+        <h1>Task list homework</h1>
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Description:</span>
+            </div>
+            <textarea class="form-control" aria-label="With textarea" v-model="currentContent"></textarea>
+        </div>
+        <div class="actions_add_edit">
+            <button type="button" class="btn btn-success" @click="currentContent = ''">Clear</button>
+            <button type="button" class="btn btn-success" @click="addTask">Add</button>
+        </div>
+        <div class="tasks">
+            <transition-group
+                    appear
+                    name="my_animation"
+            >
+                <div
+                        class="task_block"
+                        v-for="(el,index) in tasks_list"
+                        :key="el.uniq_id"
+                        :class="{done: el.done, undone: !el.done}"
+                >
+                    <div class="description">
+                        <p> <span style="font-weight: bold">{{ el.uniq_id }}</span>. {{ el.content }} </p>
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal" @click="toggleModal(el)">Edit</button>
+                        <transition
+                                appear
+                                enter-class="animated fade-In"
+                                leave-class="animated fade-Out"
+                                method="out-in"
+                        >
+                            <button v-if="!el.done"type="button" class="btn btn-success" @click="el.done = !el.done; editTask(el)">Done</button>
+                            <button v-else="el.done" type="button" class="btn btn-warning" @click="el.done = !el.done; editTask(el)">Undone</button>
+                        </transition>
+
+                        <button type="button" class="btn btn-danger" @click="removeTask(el)">Remove</button>
+                    </div>
+                </div>
+            </transition-group>
+            <transition
+                    name="my_animation"
+            >
+                <div v-if="focusEl" class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" :class="{show:focusEl}">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true" @click="toggleModal">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="input-group input-group-lg">
+                                    <textarea class="form-control" aria-label="With textarea" v-model="contentToEdit"> {{ currentEl.content }}</textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="toggleModal">Close</button>
+                                <button type="button" class="btn btn-primary" @click="editTask(currentEl,contentToEdit); focusEl = false">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            currentContent: '',
+            contentToEdit: '',
+            currentEl: '',
+            focusEl: false,
+            tasks_list: [
+                {
+                    uniq_id: 1,
+                    content: 'text task 1 fds fdsa fsda asdf sadf asfdsa fsadf asdf asdf dsaf a',
+                    done: false,
+                },
+            ]
+        },
+        methods: {
+            updateInfo() {
+                return fetch('/tasks_list', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+                    .then(result => result.json())
+                    .then(data => {
+                        this.tasks_list = [];
+                        for (let el of data) {
+                            this.tasks_list.push(el);
+                        };
+                    });
+            },
+            removeTask(el) {
+                return fetch('/tasks_list/remove', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({uniq_id: el.uniq_id})
+                })
+                    .then(result => result.json())
+                    .then(data => {
+                        this.tasks_list.splice(this.tasks_list.indexOf(el),1);
+                    });
+            },
+            addTask() {
+                if (this.currentContent) {
+                    return fetch('/tasks_list/add', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({currentContent: this.currentContent})
+                    })
+                        .then(result => result.json())
+                        .then(data => {
+                            this.tasks_list.push(data);
+                        });
+                }
+            },
+            editTask(el,contentToEdit = '') {
+                if (contentToEdit) {
+                    el.content = contentToEdit;
+                }
+                return fetch('/tasks_list/update', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(
+                        {
+                            uniq_id: el.uniq_id,
+                            content: el.content,
+                            done: el.done,
+                        }
+                    )
+                })
+                    .then(result => result.json())
+                    .then(data => {
+
+                    });
+            },
+            toggleModal(el) {
+                this.focusEl = !this.focusEl;
+                if (this.focusEl) {
+                    this.currentEl = el;
+                    this.contentToEdit = el.content;
+                }
+            }
+        },
+        mounted() {
+            this.updateInfo();
+        }
+    });
+</script>
+</body>
+</html>
