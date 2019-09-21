@@ -1,8 +1,8 @@
 {
-  "name": "task2",
-  "version": "0.0.2",
-  "description": "geekbrains second hometask",
-  "main": "task2_1.js",
+  "name": "v.lazarev",
+  "version": "0.0.3",
+  "description": "geekbrains third hometask",
+  "main": "task3_1.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
