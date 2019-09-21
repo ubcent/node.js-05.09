@@ -1,18 +1,17 @@
 {
-  "name": "borisovkirill",
+  "name": "parse-site",
   "version": "1.0.0",
-  "description": "",
+  "description": "Парсинг сайта https://ria.ru + переводчик через yandex API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "Borisov Kirill",
+  "author": "cemeh666",
   "license": "ISC",
   "dependencies": {
-    "ansi": "^0.3.1",
     "cheerio": "^1.0.0-rc.3",
-    "minimist": "^1.2.0",
+    "cli-table": "^0.3.1",
+    "query-string": "^6.8.3",
     "request": "^2.88.0"
   }
 }
