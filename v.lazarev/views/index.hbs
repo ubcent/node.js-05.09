@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Geekbrains task 4 by v.lazarev</title>
+</head>
+<body>
+  <h1>Новости</h1>
+  <form action="/" method="post">
+    <h2>Категория</h2>
+    <input type="radio" name="category" value="politics" checked> Политика<br>
+    <input type="radio" name="category" value="world"> В мире<br>
+    <input type="radio" name="category" value="economy"> Экономика
+    <h2>Количество</h2>
+    1 <input type="range" name="quantity" min="1" max="10"> 10<br>
+    <input type="submit" value="Показать"><br>
+  </form>
+  {{#if news}}
+    <h2>Лента</h2>
+    {{#each news}}
+      {{this}}<br>
+    {{/each}}
+  {{/if}}
+</body>
+</html>
