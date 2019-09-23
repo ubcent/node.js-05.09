@@ -1,6 +1,11 @@
 const express = require('express');
 const path = require('path');
 const consolidate = require('consolidate');
+const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://192.168.99.100:32775/insta', { useUnifiedTopology: true, useNewUrlParser: true });
+
+const User = require('./models/user');
 
 const app = express();
 
@@ -17,11 +22,6 @@ app.use('/assets', express.static(
 // middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use((req, res, next) => {
-  console.log('middleware');
-  req.body = { name: 'Vasily Pupkin' };
-  next();
-});
 
 app.all('/', (req, res, next) => {
   console.log('all');
@@ -35,9 +35,11 @@ app.get('/', (req, res) => {
   });
 });
 
-app.post('/users', (req, res) => {
-  console.log(req.body);
-  res.send('OK');
+app.post('/users', async (req, res) => {
+  const user = new User(req.body);
+  const savedUser = await user.save();
+
+  res.send(savedUser);
 });
 
 app.post('/tasks', (req, res) => {
@@ -45,9 +47,16 @@ app.post('/tasks', (req, res) => {
   res.send('OK');
 });
 
-app.get('/users/:id', (req, res) => {
-  console.log(req.params.id, req.query);
-  res.send('Params');
+app.get('/users', async (req, res) => {
+  const users = await User.find();
+
+  res.json(users);
+});
+
+app.get('/users/:id', async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  res.json(user);
 });
 
 app.listen(8888, () => {
