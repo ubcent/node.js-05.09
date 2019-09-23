@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>{{siteName}}</h1>
+    <p>Параметры новостей</p>
+    <form method="POST" action="/news">
+        <div>
+            Категория новостей
+        </div>
+        <select name="newsSelect" id="newsSelect">
+            {{#each categoriesNewsList}}
+                <option value={{this}}>{{this}}</option>
+            {{/each}}
+        </select>
+        <div>
+           Колличество новостей
+        </div>
+        <input type="range" min=1 max=100 name="rangeNews" >
+        <div>
+            <input type="submit" value="Отправить" />
+        </div>
+    </form>
+</body>
+</html>
