@@ -1,0 +1,29 @@
+<h1>
+    Переводчик с eng на rus
+</h1>
+<p>
+    <a href="/">назад</a>
+</p>
+
+<form action="/translator" method="post" style="display: inline-block">
+    <p>
+        Текст перевода
+    </p>
+    <p>
+        <textarea name="text" id="text" cols="30" rows="10" placeholder="Введите текст для перевода:" required>{% if(text) %}{{ text }}{% endif %}</textarea>
+    </p>
+    <p>
+       <input type="submit" value="Перевести">
+    </p>
+</form>
+
+{% if(result) %}
+    <div style="display: inline-block; vertical-align: top">
+        <p>
+            Результат перевода:
+        </p>
+        <p>
+            <textarea cols="30" rows="10">{{ result }}</textarea>
+        </p>
+    </div>
+{% endif %}

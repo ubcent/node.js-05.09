@@ -1,21 +1,16 @@
 {
-  "name": "batvale1",
+  "name": "lesson_3_hw",
   "version": "1.0.0",
   "description": "",
-  "main": "game.js",
+  "main": "news.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "boxen": "^4.1.0",
     "cheerio": "^1.0.0-rc.3",
-    "express": "^4.17.1",
-    "i": "^0.3.6",
-    "install": "^0.13.0",
-    "minimist": "^1.2.0",
-    "mongoose": "^5.7.1",
     "request": "^2.88.0"
   }
 }

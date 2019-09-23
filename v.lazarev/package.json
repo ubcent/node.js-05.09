@@ -1,0 +1,19 @@
+{
+  "name": "v.lazarev",
+  "version": "0.0.3",
+  "description": "geekbrains third hometask",
+  "main": "task3_1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laidrivm/node.js-05.09.git"
+  },
+  "author": "v.lazarev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/laidrivm/node.js-05.09/issues"
+  },
+  "homepage": "https://github.com/laidrivm/node.js-05.09#readme"
+}

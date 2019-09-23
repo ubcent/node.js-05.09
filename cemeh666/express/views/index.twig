@@ -1,0 +1,11 @@
+<h1>Список тем:</h1>
+<a href="/translator">Переводчик</a>
+<ul>
+    {% for t in themes %}
+        <li>
+            <a href="/theme{{ t.link }}">
+                {{ t.title }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
