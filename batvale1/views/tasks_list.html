@@ -79,23 +79,76 @@
         .show {
             display: block;
         }
+
+        .form-signin {
+            width: 100%;
+            max-width: 330px;
+            padding: 15px;
+            margin: 0 auto;
+        }
+        .form-signin .checkbox {
+            font-weight: 400;
+        }
+        .form-signin .form-control {
+            position: relative;
+            box-sizing: border-box;
+            height: auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .form-signin .form-control:focus {
+            z-index: 2;
+        }
+        .form-signin input[type="email"] {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+        .form-signin input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .logout {
+            margin: 15px 0;
+        }
+
     </style>
 </head>
 <body>
 <div id="app">
     <div class="tasks_list">
         <h1>Task list homework</h1>
-        <div class="input-group input-group-lg">
-            <div class="input-group-prepend">
-                <span class="input-group-text">Description:</span>
+        <form class="form-signin" v-if="!userAuthenticated"@submit.prevent>
+            <h1 class="h3 mb-3 font-weight-normal"> {{ actionText }}</h1>
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" v-model="user">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" v-model="password">
+            <!--<div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>-->
+            <p class="text-danger" v-if="showAuthError"> {{ authErr }} </p>
+            <button class="btn btn-lg btn-dark btn-block" @click="logIn">Sign in</button>
+            <button class="btn btn-lg btn-secondary btn-block" @click="addUser">Sign up</button>
+        </form>
+        <btn v-if="userAuthenticated" class="btn btn-lg btn-dark btn-block logout" href="/logout" @click="logOut"> ({{ currentUser }}) Log out</btn>
+
+        <div v-if="userAuthenticated">
+            <div class="input-group input-group-lg">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Description:</span>
+                </div>
+                <textarea class="form-control" aria-label="With textarea" v-model="currentContent"></textarea>
             </div>
-            <textarea class="form-control" aria-label="With textarea" v-model="currentContent"></textarea>
+            <div class="actions_add_edit">
+                <button type="button" class="btn btn-success" @click="currentContent = ''">Clear</button>
+                <button type="button" class="btn btn-success" @click="addTask">Add</button>
+            </div>
         </div>
-        <div class="actions_add_edit">
-            <button type="button" class="btn btn-success" @click="currentContent = ''">Clear</button>
-            <button type="button" class="btn btn-success" @click="addTask">Add</button>
-        </div>
-        <div class="tasks">
+        <div class="tasks" v-if="userAuthenticated">
             <transition-group
                     appear
                     name="my_animation"
@@ -160,18 +213,20 @@
             currentContent: '',
             contentToEdit: '',
             currentEl: '',
+            currentUser: '',
             focusEl: false,
-            tasks_list: [
-                {
-                    uniq_id: 1,
-                    content: 'text task 1 fds fdsa fsda asdf sadf asfdsa fsadf asdf asdf dsaf a',
-                    done: false,
-                },
-            ]
+            tasks_list: [],
+            user: '',
+            password: '',
+            logInError: '',
+            userAuthenticated: false,
+            showAuthError: false,
+            authErr: '',
+            actionText: 'Please sign in',
         },
         methods: {
             updateInfo() {
-                return fetch('/tasks_list', {
+                return fetch('/tasks_list/get_tasks', {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -241,10 +296,92 @@
                     this.currentEl = el;
                     this.contentToEdit = el.content;
                 }
-            }
+            },
+            addUser() {
+                if (this.user && this.password) {
+                    return fetch('/register', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(
+                            {
+                                username: this.user,
+                                password: this.password,
+                            }
+                        )
+                    })
+                        .then(result => result.json())
+                        .then(data => {
+                            this.user = '';
+                            this.password = '';
+                            this.actionText = 'User has been added, please sign in.';
+                        });
+                };
+            },
+            logIn() {
+                if (this.user && this.password) {
+                    return fetch('/login', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(
+                            {
+                                username: this.user,
+                                password: this.password,
+                            }
+                        )
+                    })
+                        .then(result => result.json())
+                        .catch(err => {
+                            this.userAuthenticated = false;
+                            this.showAuthError = true;
+                            this.authErr = 'Incorrect password or username.';
+                            this.actionText = 'Please sign in';
+                        })
+                        .then(data => {
+                            if (data) {
+                                this.currentUser = data;
+                                this.userAuthenticated = true;
+                                this.showAuthError = false;
+                                this.authErr = '';
+                                this.actionText = 'Please sign in';
+                                this.updateInfo();
+                            }
+                        });
+                }
+            },
+            logOut() {
+                return fetch('/logout', {
+                    method: "get",
+                })
+                    .then(result => result.json())
+                    .then(data => {
+                        if (data) {
+                            this.userAuthenticated = false;
+                        }
+                    });
+            },
+            checkAuth() {
+                return fetch('/islogin', {
+                    method: "get",
+                })
+                    .then(result => result.json())
+                    .then(data => {
+                        if (data) {
+                            this.userAuthenticated = true;
+                        } else {
+                            this.userAuthenticated = false;
+                        }
+                    });
+            },
         },
         mounted() {
-            this.updateInfo();
+            this.checkAuth();
+            if (!this.userAuthenticated) {
+                this.updateInfo();
+            }
         }
     });
 </script>

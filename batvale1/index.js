@@ -3,13 +3,41 @@ const path = require('path');
 const request = require('request');
 const cheerio = require('cheerio');
 const mongoose = require('mongoose');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+
+const Task = require('./models/task');
+const User = require('./models/user');
+const passport = require('./modules/auth');
 
 //init
 const app = express();
 app.use(express.json());
 
 mongoose.connect('mongodb://127.0.0.1:32768/task_db', {useNewUrlParser: true, useUnifiedTopology: true});
-const Task = require('./models/task');
+
+app.use(session({
+    resave: true,
+    saveUninitialized: false,
+    secret: 'tasks test project',
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+}));
+
+app.use(passport.initialize);
+app.use(passport.session);
+
+const mustBeAutenticated = (req, res, next) => {
+    if (req.user) {
+        console.log(req.user);
+        console.log('hi');
+        next();
+    } else {
+        console.log('no');
+    }
+}
+a = /\/tasks_list.+/;
+console.log(a.test('/tasks_list/get_tasks/'));
+app.use(/\/tasks_list.+/, mustBeAutenticated);
 //end init
 
 //routing
@@ -33,6 +61,19 @@ app.get('/tasks_list', (req, res) => {
 //end routing
 
 //request
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.send(true);
+});
+
+app.get('/islogin', (req, res) => {
+    if (req.user) {
+        res.send(true);
+    } else {
+        res.send(false);
+    }
+});
+
 app.post('/news', (req, res) => {
     request('https://dota2.ru/', (err, response, body) => {
         if (!err && response.statusCode === 200) {
@@ -53,8 +94,10 @@ app.post('/news', (req, res) => {
     });
 });
 
-app.post('/tasks_list', async (req, res) => {
+app.post('/tasks_list/get_tasks', async (req, res) => {
+    console.log('here');
     const result = await Task.find();
+    console.log('sending tasks');
     res.send(result);
 });
 
@@ -106,6 +149,18 @@ app.post('/tasks_list/update', async (req, res) => {
             res.send(el);
         });
 });
+
+app.post('/register', async (req, res) => {
+    const user = new User(req.body);
+    const savedUser = user.save();
+    res.send(true);
+});
+
+app.post('/login', passport.authenticate, (req, res) => {
+    res.send(JSON.stringify(req.user.username));
+    console.log(req.user.username);
+});
+
 //end requests
 
 app.listen(8888, () => {
