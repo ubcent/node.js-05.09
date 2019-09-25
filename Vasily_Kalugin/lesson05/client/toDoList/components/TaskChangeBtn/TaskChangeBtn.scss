@@ -1,0 +1,15 @@
+@import '~/assets/scss/resources.scss';
+
+.todo-task__task-change-btn {
+    @include todo-button;
+    @include todo-task-button;
+    margin-left: rem(5);
+
+    &_expect {
+        background: $expectColor;
+    }
+
+    &_disable {
+        background: $disableColor;
+    }
+}

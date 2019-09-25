@@ -33,12 +33,12 @@ const rules = [
         ],
     },
     {
-        test: /\.{png|gif|jpe?g|svg}$/,
+        test: /\.(png|gif|jpe?g|svg)$/,
         exclude: /node_modules/,
         loaders: ['url-loader'],
     },
     {
-        test: /\.{woff|woff2|eot|ttf|otf}$/,
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
         exclude: /node_modules/,
         use: ['url-loader'],
     },

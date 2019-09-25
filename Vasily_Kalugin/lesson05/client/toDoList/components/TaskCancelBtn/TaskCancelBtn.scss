@@ -1,0 +1,11 @@
+@import '~/assets/scss/resources.scss';
+
+.task-creator__task-cancel-btn {
+    @include todo-button;
+    @include todo-task-button;
+    margin-left: rem(5);
+
+    &_cancel {
+        background: $cancelColor;
+    }
+}

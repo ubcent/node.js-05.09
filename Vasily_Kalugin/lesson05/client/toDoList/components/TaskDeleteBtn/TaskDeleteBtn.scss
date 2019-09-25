@@ -1,0 +1,15 @@
+@import '~/assets/scss/resources.scss';
+
+.todo-task__task-delete-btn {
+    @include todo-button;
+    @include todo-task-button;
+    margin-left: auto;
+
+    &_cancel {
+        background: $cancelColor;
+    }
+
+    &_disable {
+        background: $disableColor;
+    }
+}

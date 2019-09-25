@@ -1,0 +1,27 @@
+@import './functions.scss';
+
+@mixin todo-button {
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-size: rem(16);
+    outline: none;
+
+    &:active {
+        font-size: rem(14);
+    }
+}
+
+@mixin todo-task-button {
+    flex: 0 0 15%;
+    height: rem(25);
+    margin-top: rem(5);
+}
+
+@mixin todo-menu-button {
+    background: $activeColor;
+    flex: 0 0 45%;
+    height: rem(30);
+    margin-bottom: rem(5);
+}

@@ -1,7 +1,7 @@
-import reducersTestApp from './testCotainer/reducers';
+import reducersToDoList from '~/toDoList/reducers';
 
 const rootReducers = {
-    TestApp: reducersTestApp,
+    toDoListData: reducersToDoList,
 };
 
 export default rootReducers;

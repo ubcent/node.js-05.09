@@ -36,7 +36,7 @@ const rules = [
         ],
     },
     {
-        test: /\.{png|gif|jpe?g|svg}$/,
+        test: /\.(png|gif|jpe?g|svg)$/,
         exclude: /node_modules/,
         loaders: [
             {
@@ -59,7 +59,7 @@ const rules = [
         ],
     },
     {
-        test: /\.{woff|woff2|eot|ttf|otf}$/,
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
         exclude: /node_modules/,
         use: [
             {
