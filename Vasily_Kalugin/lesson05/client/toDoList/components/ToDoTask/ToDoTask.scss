@@ -1,0 +1,36 @@
+@import '~/assets/scss/resources.scss';
+
+.todo-task {
+    align-items: flex-end;
+    border: 1px solid $formBorderColor;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: wrap;
+    margin: rem(5) 0;
+    padding: 0 rem(5);
+
+    &__status-ico {
+        height: rem(20);
+        margin-top: auto;
+        width: rem(20);
+    }
+
+    &__time {
+        flex: 0 0 30%;
+        font-size: rem(20);
+        height: rem(20);
+        margin-top: auto;
+        margin-bottom: 0;
+        padding-left: rem(5);
+    }
+
+    &__text {
+        box-sizing: border-box;
+        flex: 0 0 100%;
+        font-size: rem(22);
+        margin: rem(15) 0;
+        padding: 0 rem(10);
+    }
+}

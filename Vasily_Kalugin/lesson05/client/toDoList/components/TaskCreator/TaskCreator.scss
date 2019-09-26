@@ -1,0 +1,13 @@
+@import '~/assets/scss/resources.scss';
+
+.task-creator {
+    align-items: flex-end;
+    border: 1px solid $formBorderColor;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex: 0 0 100%;
+    flex-wrap: wrap;
+    margin: rem(5) 0;
+    padding: 0 rem(5);
+}

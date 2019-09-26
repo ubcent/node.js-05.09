@@ -1,0 +1,18 @@
+@import '~/assets/scss/resources.scss';
+
+.task-creator__task-date-btn {
+    @include todo-button;
+    @include todo-task-button;
+    flex: 1 0 100%;
+    margin-top: 0;
+    padding: 0 rem(20);
+    
+    &_active {
+        background: $activeColor;
+    }
+}
+
+.react-datepicker__input-container {
+    display: flex!important;
+    height: rem(25);
+}

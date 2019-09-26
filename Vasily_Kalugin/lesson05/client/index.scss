@@ -1,0 +1,30 @@
+@import '~/assets/scss/fonts.scss';
+@import '~/assets/scss/resources.scss';
+
+html {
+    background: $mainBackColor;
+    color: $textColor;
+    font-size: $xlMainFontSize;
+    font-family: 'Metronic Pro Air', sans-serif;
+
+    @media screen and (max-width: $lgWidth) {
+        font-size: $lgMainFontSize;
+    }
+    @media screen and (max-width: $mdWidth) {
+        font-size: $mdMainFontSize;
+    }
+    @media screen and (max-width: $smWidth) {
+        font-size: $smMainFontSize;
+    }
+    @media screen and (max-width: $xsWidth) {
+        font-size: $xsMainFontSize;
+    }
+}
+
+body {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 100vh;
+}
