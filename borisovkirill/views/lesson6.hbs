@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>TODO world</title>
+    <link rel="stylesheet" href="/css/lesson5.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Задачи, которые обязательно нужно выполнить</h1>
+            <form method="POST" action="/tasks/add">
+                <input type="text" placeholder="Описание задачи: " name="description" class="input_description"/>
+                <input type="submit" class="sendbtn" value="Добавить задачу ...">
+            </form>    
+        </div>
+        <div class="main">
+            <ul>
+            {{#each tasks}}
+               <div class="task">
+                   <div class="task-isCompleted">
+                    {{#if this.isCompleted}}
+                    +
+                    {{/if}}
+                   </div>
+                   <div class="task-description">{{this.description}}</div>
+                   <div class="task-action">
+                    <form method="POST" action="/tasks/complete">
+                        <input type="hidden" name="id" value="{{this._id}}"/>
+                        <input type="submit" class="sendbtn" value="Выполнено">
+                    </form>    
+                    </div>
+                   <div class="task-action">
+                    <form method="POST" action="/tasks/uncomplete">
+                        <input type="hidden" name="id" value="{{this._id}}"/>
+                        <input type="submit" class="sendbtn" value="Не выполнено">
+                    </form>    
+                    </div>
+                   <div class="task-action">
+                    <form method="POST" action="/tasks/delete">
+                        <input type="hidden" name="id" value="{{this._id}}"/>
+                        <input type="submit" class="sendbtn" value="Удалить">
+                    </form>    
+                    </div>
+               </div>
+            {{/each}}
+            </ul>
+        </div>
+        <hr>
+        <div class="footer">
+            <a href="./logout">Выход</a>
+        </div>
+    </div>
+</body>
+</html>
