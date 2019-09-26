@@ -1,8 +1,19 @@
 import './CreateTaskBtn.scss';
 import React from 'react';
+import { connect } from 'react-redux';
 
-function CreateTaskBtn() {
-    return <button className="todo__create-task-btn">Create task</button>;
+import { setMutableItem } from '../../actions';
+
+function setMutableItemAction(props) {
+    props.dispatch(setMutableItem({ id: 'newTask' }));
 }
 
-export default CreateTaskBtn;
+function CreateTaskBtn(props) {
+    return (
+        <button className="todo__create-task-btn" onClick={() => setMutableItemAction(props)}>
+            Create task
+        </button>
+    );
+}
+
+export default connect()(CreateTaskBtn);

@@ -1,6 +1,12 @@
 @import '~/assets/scss/resources.scss';
 
-.todo__choose-date-btn {
+.todo__custom-date-btn {
     @include todo-button;
     @include todo-menu-button;
+    flex: 1 0 100%;
+    margin-top: 0;
+}
+
+.todo__choose-date-btn {
+    flex: 0 0 45%;
 }

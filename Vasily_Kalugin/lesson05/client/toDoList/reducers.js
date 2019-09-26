@@ -15,7 +15,7 @@ import {
 } from './actionTypes';
 
 const initState = {
-    currentDate: new Date(),
+    selectedTasksDate: new Date(),
     mutableItem: {
         id: null,
         date: new Date(),

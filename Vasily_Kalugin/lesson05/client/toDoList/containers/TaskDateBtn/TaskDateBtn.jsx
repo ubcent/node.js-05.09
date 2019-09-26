@@ -1,5 +1,5 @@
 import './TaskDateBtn.scss';
-import './react-datepicker.scss';
+import '~/assets/scss/plugins/react-datepicker.scss';
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
@@ -14,7 +14,7 @@ class DatePickerCustomInput extends Component {
     render() {
         return (
             <button
-                className="task-creator__task-date-btn task-creator__task-date-btn_active"
+                className="task-creator__custom-date-btn task-creator__custom-date-btn_active"
                 onClick={this.props.onClick}
             >
                 {this.props.value}
@@ -29,19 +29,21 @@ function setMutableDateAction(props, date) {
 
 function TaskDateBtn(props) {
     return (
-        <DatePicker
-            selected={props.date}
-            onChange={date => setMutableDateAction(props, date)}
-            showTimeInput
-            dateFormat="dd.MM.yyyy (HH:mm)"
-            timeFormat="HH:mm"
-            withPortal
-            peekNextMonth
-            showMonthDropdown
-            showYearDropdown
-            dropdownMode="select"
-            customInput={<DatePickerCustomInput />}
-        />
+        <div className="task-creator__task-date-btn">
+            <DatePicker
+                selected={props.date}
+                onChange={date => setMutableDateAction(props, date)}
+                showTimeInput
+                dateFormat="dd.MM.yyyy (HH:mm)"
+                timeFormat="HH:mm"
+                withPortal
+                peekNextMonth
+                showMonthDropdown
+                showYearDropdown
+                dropdownMode="select"
+                customInput={<DatePickerCustomInput />}
+            />
+        </div>
     );
 }
 

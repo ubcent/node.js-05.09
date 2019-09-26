@@ -9,6 +9,7 @@ import {
     SET_MUTABLE_ITEM_TASK_TEXT,
 } from './actionTypes';
 
+// завершить задание
 export function doneToDoTask(id) {
     return {
         type: DONE_TODO_TASK,
@@ -16,6 +17,7 @@ export function doneToDoTask(id) {
     };
 }
 
+// удалить задание
 export function deleteToDoTask() {
     return {
         type: DELETE_TODO_TASK,
@@ -23,6 +25,7 @@ export function deleteToDoTask() {
     };
 }
 
+// передать дату для выборки заданий
 export function getTasksForDate(date) {
     return {
         type: GET_TASKS_FOR_DATE,
@@ -30,6 +33,7 @@ export function getTasksForDate(date) {
     };
 }
 
+// создать новой задание
 export function createToDoTask({ date, taskText }) {
     const now = new Date();
     let status = 'failed';
@@ -44,6 +48,7 @@ export function createToDoTask({ date, taskText }) {
     };
 }
 
+// изменить выбранное задание
 export function changeToDoTask({ id, date, taskText }) {
     const now = new Date();
     let status = 'failed';
@@ -58,10 +63,11 @@ export function changeToDoTask({ id, date, taskText }) {
     };
 }
 
+// установить свойства нового или выбранного для изменения задания
 export function setMutableItem({ id, date, taskText, status }) {
     let result;
 
-    if (id === null) {
+    if (id === null || id === 'newTask') {
         result = {
             type: SET_MUTABLE_ITEM,
             payload: { id, date: new Date(), taskText: '', status: '' },
@@ -76,6 +82,7 @@ export function setMutableItem({ id, date, taskText, status }) {
     return result;
 }
 
+// установить дату нового или выбранного для изменения задания
 export function setMutableDate(date) {
     return {
         type: SET_MUTABLE_ITEM_DATE,
@@ -83,6 +90,7 @@ export function setMutableDate(date) {
     };
 }
 
+// установить текст нового или выбранного для изменения задания
 export function setMutableTaskText(taskText) {
     return {
         type: SET_MUTABLE_ITEM_TASK_TEXT,

@@ -18,7 +18,8 @@ class ToDoTaskList extends Component {
             <Router>
                 <div className="todo-task-list">
                     <CreateTaskBtn />
-                    <ChooseDateBtn currentDate={this.props.currentDate} />
+                    <ChooseDateBtn date={this.props.selectedTasksDate} />
+                    {this.props.mutableItem.id === 'newTask' ? <TaskCreator {...this.props.mutableItem} /> : null}
                     {this.props.toDoTaskList.map(toDoTask => {
                         let result = <ToDoTask key={toDoTask.id} {...toDoTask} />;
 
