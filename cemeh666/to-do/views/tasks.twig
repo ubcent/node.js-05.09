@@ -1,0 +1,49 @@
+<a href="/logout">Выход</a>
+
+<form action="/tasks" method="POST">
+    <input type="text" placeholder="title" name="title" /><br />
+    <input type="submit" />
+</form>
+<table border="1">
+    <tr>
+        <th>
+            Название задания
+        </th>
+        <th>
+            Статус выполнения
+        </th>
+        <th>
+            Действия
+        </th>
+    </tr>
+    {% for task in tasks %}
+        <tr>
+            <td>
+                {{task.title}}
+            </td>
+            <td align="center">
+                {% if task.completed %}
+                    +
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>
+                {% if (task.completed != true) %}
+                    <form action="/tasks/complete" method="POST">
+                        <input type="hidden" name="id" value="{{task._id}}" />
+                        <input type="submit" value="Завершить задание" />
+                    </form>
+                {% endif %}
+                <a href="/tasks/{{ task._id }}/edit">
+                    Изменить
+                </a>
+                <form action="/tasks/delete" method="POST">
+                    <input type="hidden" name="id" value="{{task._id}}" />
+                    <input type="submit" value="Удалить" />
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>

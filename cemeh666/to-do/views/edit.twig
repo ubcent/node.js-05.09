@@ -1,0 +1,8 @@
+<h1>
+    Редактирование записи
+</h1>
+<form method="POST">
+    <input type="text" placeholder="title" name="title" value="{{ task.title }}"/><br />
+    <input type="hidden" name="id" value="{{ task._id }}"/><br />
+    <input type="submit" />
+</form>
