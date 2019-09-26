@@ -1,0 +1,6 @@
+@import '~/assets/scss/resources.scss';
+
+.todo__create-task-btn {
+    @include todo-button;
+    @include todo-menu-button;
+}

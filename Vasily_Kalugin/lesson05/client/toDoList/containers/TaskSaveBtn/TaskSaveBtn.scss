@@ -1,0 +1,11 @@
+@import '~/assets/scss/resources.scss';
+
+.task-creator__task-save-btn {
+    @include todo-button;
+    @include todo-task-button;
+    margin-left: auto;
+
+    &_expect {
+        background: $expectColor;
+    }
+}

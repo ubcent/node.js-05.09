@@ -1,14 +1,11 @@
-// 1. Запоминать в куки настройки формы
-// 2. Когда пользователь зашёл на сайт, искать в куках настройки
-// 3. Если нашли, учитывать при отображении страницы
-// 4. Если не нашли, смотреть квери-параметры в гет-запросе ?category=world&quantity=5
-
 const express = require('express');
 const path = require('path');
 const consolidate = require('consolidate');
 const handlebars = require('handlebars');
 const request = require('request');
 const cheerio = require('cheerio');
+const cookieParser = require('cookie-parser');
+const url = require('url');
 
 function resolveSource(category) {
   let source = 'https://ria.ru/';
@@ -26,6 +23,13 @@ function resolveSource(category) {
   return source;
 }
 
+handlebars.registerHelper('ifCond', (v1, v2, options) => {
+  if(v1 === v2) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
+
 const app = express();
 
 app.engine('hbs', consolidate.handlebars);
@@ -33,9 +37,21 @@ app.set('view engine', 'hbs');
 app.set('views', path.resolve(__dirname, 'views'));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
-  res.render('index');
+  if (req.cookies.category === undefined) {
+    req.cookies.category = url.parse(req.url, true).query.category;
+  }
+
+  if (req.cookies.quantity === undefined) {
+    req.cookies.quantity = url.parse(req.url, true).query.quantity;
+  }
+
+  res.render('index', {
+    category: req.cookies.category,
+    quantity: req.cookies.quantity
+  });
 });
 
 app.post('/', (req, res) => {
@@ -52,9 +68,15 @@ app.post('/', (req, res) => {
         newsList.push($('.list-item__title').eq(i).text());
       }
 
+      res.cookie('quantity', req.body.quantity);
+      res.cookie('category', req.body.category);
+
       res.render('index', {
+        category: req.body.category,
+        quantity: req.body.quantity,
         news: newsList
       });
+
     }
   });
 });

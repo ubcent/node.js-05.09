@@ -11,11 +11,17 @@
   "license": "ISC",
   "dependencies": {
     "ansi": "^0.3.1",
+    "bcryptjs": "^2.4.3",
     "cheerio": "^1.0.0-rc.3",
+    "connect-mongo": "^3.0.0",
     "consolidate": "^0.15.1",
     "express": "^4.17.1",
-    "handlebars": "^4.2.0",
+    "express-session": "^1.16.2",
+    "handlebars": "^4.3.1",
     "minimist": "^1.2.0",
+    "mongoose": "^5.7.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "request": "^2.88.0"
   }
 }

@@ -1,0 +1,14 @@
+@import '~/assets/scss/resources.scss';
+
+.todo-task-list {
+    background: $formBackColor;
+    border: 1px solid $formBorderColor;
+    border-radius: 5px;
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between;
+    max-width: 600px;
+    min-width: 310px;
+    padding: rem(10);
+}
