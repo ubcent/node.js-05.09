@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
 
-import { getTasksForDate } from '../../actions';
+import { getToDoTasksForDate } from '~/toDoList/actions';
 
 class DatePickerCustomInput extends Component {
     constructor(props) {
@@ -20,8 +20,8 @@ class DatePickerCustomInput extends Component {
     }
 }
 
-function getTasksForDateAction(props, date) {
-    props.dispatch(getTasksForDate(date));
+function getToDoTasksForDateAction(props, date) {
+    props.dispatch(getToDoTasksForDate(date));
 }
 
 function ChooseDateBtn(props) {
@@ -29,7 +29,7 @@ function ChooseDateBtn(props) {
         <div className="todo__choose-date-btn">
             <DatePicker
                 selected={props.date}
-                onChange={date => getTasksForDateAction(props, date)}
+                onChange={date => getToDoTasksForDateAction(props, date)}
                 dateFormat="dd.MM.yyyy"
                 withPortal
                 peekNextMonth

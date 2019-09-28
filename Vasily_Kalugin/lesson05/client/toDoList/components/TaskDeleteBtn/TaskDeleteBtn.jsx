@@ -1,8 +1,22 @@
 import './TaskDeleteBtn.scss';
 import React from 'react';
+import { connect } from 'react-redux';
 
-function TaskDeleteBtn(props) {
-    return <button className="todo-task__task-delete-btn todo-task__task-delete-btn_cancel">Delete</button>;
+import { deleteToDoTask } from '~/toDoList/actions';
+
+function deleteToDoTaskAction(props) {
+    props.dispatch(deleteToDoTask(props.id));
 }
 
-export default TaskDeleteBtn;
+function TaskDeleteBtn(props) {
+    return (
+        <button
+            className="todo-task__task-delete-btn todo-task__task-delete-btn_cancel"
+            onClick={() => deleteToDoTaskAction(props)}
+        >
+            Delete
+        </button>
+    );
+}
+
+export default connect()(TaskDeleteBtn);

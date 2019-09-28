@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
 
-import { setMutableDate } from '../../actions';
+import { setMutableItemDate } from '~/toDoList/actions';
 
 class DatePickerCustomInput extends Component {
     constructor(props) {
@@ -23,8 +23,8 @@ class DatePickerCustomInput extends Component {
     }
 }
 
-function setMutableDateAction(props, date) {
-    props.dispatch(setMutableDate(date));
+function setMutableItemDateAction(props, date) {
+    props.dispatch(setMutableItemDate(date));
 }
 
 function TaskDateBtn(props) {
@@ -32,7 +32,7 @@ function TaskDateBtn(props) {
         <div className="task-creator__task-date-btn">
             <DatePicker
                 selected={props.date}
-                onChange={date => setMutableDateAction(props, date)}
+                onChange={date => setMutableItemDateAction(props, date)}
                 showTimeInput
                 dateFormat="dd.MM.yyyy (HH:mm)"
                 timeFormat="HH:mm"

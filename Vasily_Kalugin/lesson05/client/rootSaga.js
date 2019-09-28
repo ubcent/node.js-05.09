@@ -1,6 +1,6 @@
-// import { fork } from 'redux-saga/effects';
-// import watchTestSaga from './testCotainer/testSaga';
+import { fork } from 'redux-saga/effects';
+import toDoListSagas from '~/toDoList/sagas';
 
-// export default function* rootSaga() {
-//     yield fork(watchTestSaga);
-// }
+export default function* rootSaga() {
+    yield fork(toDoListSagas);
+}

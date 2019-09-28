@@ -2,15 +2,15 @@ import './CreateTaskBtn.scss';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setMutableItem } from '../../actions';
+import { setMutableItemId } from '~/toDoList/actions';
 
-function setMutableItemAction(props) {
-    props.dispatch(setMutableItem({ id: 'newTask' }));
+function setMutableItemIdAction(props) {
+    props.dispatch(setMutableItemId('newTask'));
 }
 
 function CreateTaskBtn(props) {
     return (
-        <button className="todo__create-task-btn" onClick={() => setMutableItemAction(props)}>
+        <button className="todo__create-task-btn" onClick={() => setMutableItemIdAction(props)}>
             Create task
         </button>
     );

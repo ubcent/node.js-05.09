@@ -14,17 +14,18 @@ class ToDoTaskList extends Component {
     }
 
     render() {
+        console.log(this.props.err);
         return (
             <Router>
                 <div className="todo-task-list">
                     <CreateTaskBtn />
                     <ChooseDateBtn date={this.props.selectedTasksDate} />
-                    {this.props.mutableItem.id === 'newTask' ? <TaskCreator {...this.props.mutableItem} /> : null}
+                    {this.props.mutableItem.id === 'newTask' ? <TaskCreator /> : null}
                     {this.props.toDoTaskList.map(toDoTask => {
                         let result = <ToDoTask key={toDoTask.id} {...toDoTask} />;
 
                         if (toDoTask.id === this.props.mutableItem.id) {
-                            result = <TaskCreator key={toDoTask.id} {...toDoTask} />;
+                            result = <TaskCreator key={toDoTask.id} />;
                         }
                         return result;
                     })}
