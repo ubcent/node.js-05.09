@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>TODO world - вход</title>
+    <link rel="stylesheet" href="/css/lesson5.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            {{#if error}}
+              <h2>Неверный пароль</h2>
+            {{/if}}
+
+            <h1>Укажите свой логин и пароль</h1>
+            <form action="/auth" method="POST">
+                <input type="text" placeholder="логин..." name="username" class="input_description" /><br/>
+                <input type="password" placeholder="пароль..." name="password" class="input_description" /><br/>
+                <input type="submit" class="sendbtn" value="Войти ...">
+            </form>            
+        <hr>
+        <div class="footer">
+            &copy;&nbsp;GeekTODO
+        </div>
+    </div>
+</body>
+</html>

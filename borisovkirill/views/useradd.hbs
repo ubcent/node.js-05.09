@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>TODO world - регистрация пользователя</title>
+    <link rel="stylesheet" href="/css/lesson5.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Регистрация нового пользователя</h1>
+            <form action="/users/add" method="POST">
+                <input type="text" placeholder="логин..." name="username" class="input_description" /><br/>
+                <input type="password" placeholder="пароль..." name="password" class="input_description" /><br/>
+                <input type="text" placeholder="ФИО ..." name="fullname" class="input_description" /><br/><br/>
+                <input type="submit" class="sendbtn" value="Зарегистрировать ...">
+            </form>            
+        <hr>
+        <div class="footer">
+            &copy;&nbsp;GeekTODO
+        </div>
+    </div>
+</body>
+</html>
+

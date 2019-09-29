@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>РИА Новости parsed by nodejs</title>
+    <link rel="stylesheet" href="/css/lesson4.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>РИА Новости parsed by nodejs</h1>
+            <form method="POST" action="/">
+                <select name="newscategory" class="combobox">
+                    {{#each categories}}
+                        <option {{selected}} value="{{categoryId}}">{{categoryName}}</option>
+                    {{/each}}
+                </select>       
+                <input type="submit" class="sendbtn" value="Показать новости ...">
+            </form>    
+        </div>
+        <div class="main">
+            {{#each articles}}
+               <div class="article">
+                   <div class="article-header">{{title}}</div>
+                   <div class="article-date">{{datetime}}</div>
+                   <div class="article-text">
+                        {{#each text}}
+                           <p>{{this}}</p>
+                        {{/each}}
+                    </div>
+               </div>
+            {{/each}}
+        </div>
+        <hr>
+        <div class="footer">
+            &copy;&nbsp;Все права атакованы Чубаккой
+        </div>
+    </div>
+</body>
+</html>

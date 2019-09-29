@@ -1,34 +1,23 @@
 {
-  "name": "node.js-05.09",
+  "name": "parse-site",
   "version": "1.0.0",
-  "description": "",
+  "description": "To-Do List",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "author": "cemeh666",
   "license": "ISC",
   "dependencies": {
-    "ansi": "^0.3.1",
     "bcryptjs": "^2.4.3",
-    "cheerio": "^1.0.0-rc.3",
+    "connect-flash": "^0.1.1",
     "connect-mongo": "^3.0.0",
     "consolidate": "^0.15.1",
-    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
-    "handlebars": "^4.2.0",
-    "jsonwebtoken": "^8.5.1",
-    "minimist": "^1.2.0",
     "mongoose": "^5.7.1",
-    "mysql": "^2.17.1",
-    "nodemailer": "^6.3.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "request": "^2.88.0"
-  },
-  "devDependencies": {
-    "pm2": "^3.5.1"
+    "twig": "^1.13.3"
   }
 }

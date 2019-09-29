@@ -1,8 +1,8 @@
 {
-  "name": "task2",
-  "version": "0.0.2",
-  "description": "geekbrains second hometask",
-  "main": "task2_1.js",
+  "name": "v.lazarev",
+  "version": "0.0.4",
+  "description": "fourth hometask",
+  "main": "task4.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/laidrivm/node.js-05.09/issues"
   },
-  "homepage": "https://github.com/laidrivm/node.js-05.09#readme"
+  "homepage": "https://github.com/laidrivm/node.js-05.09#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "consolidate": "^0.15.1",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "handlebars": "^4.2.1",
+    "path": "^0.12.7",
+    "request": "^2.88.0",
+    "url": "^0.11.0"
+  }
 }
