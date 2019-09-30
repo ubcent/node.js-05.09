@@ -1,0 +1,161 @@
+<link rel="stylesheet" href="https://www.jqueryscript.net/demo/Render-JSON-Schema-In-HTML-jQuery-JSON-Presenter/jquery.jsonPresenter.css" />
+<style>
+    .form-block{
+        width: 19%;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .json-out{
+        display: none;
+    }
+</style>
+
+<div class="form-block">
+    <h3>Авторизация</h3>
+    <form method="POST" action="/api/auth">
+        <input type="text" name="name" placeholder="username" /><br />
+        <input type="password" name="password" placeholder="password" /><br />
+        <input type="submit" />
+        <button type="button" id="delete-token">Удалить токен</button>
+        <span class="json-out">JSON</span>
+    </form>
+</div>
+
+<div class="form-block">
+    <h3>Создание задания</h3>
+    <form action="/api/tasks" method="POST">
+        <input type="text" placeholder="title" name="title" /><br />
+        <input type="submit" />
+        <span class="json-out">JSON</span>
+    </form>
+</div>
+
+<div class="form-block">
+    <h3>Показ задании</h3>
+    <form action="/api/tasks" method="GET">
+        <input type="submit" />
+        <span class="json-out">JSON</span>
+    </form>
+</div>
+
+<div class="form-block">
+    <h3>Изменение задания</h3>
+    <form action="/api/tasks" method="PUT">
+        <input type="text" placeholder="task_id" name="_id" /><br />
+        <input type="text" placeholder="title" name="title" /><br />
+        <select name="completed" id="">
+            <option value="true">выполнено</option>
+            <option value="false">не выполнено</option>
+        </select>
+        <input type="submit" />
+        <span class="json-out">JSON</span>
+    </form>
+</div>
+
+<div class="form-block">
+    <h3>Удаление задания</h3>
+    <form action="/api/tasks" method="DELETE">
+        <input type="text" placeholder="task_id" name="_id" /><br />
+        <input type="submit" />
+        <span class="json-out">JSON</span>
+    </form>
+</div>
+
+
+<script src="//code.jquery.com/jquery.min.js"></script>
+<script src="https://www.jqueryscript.net/demo/Render-JSON-Schema-In-HTML-jQuery-JSON-Presenter/jquery.jsonPresenter.js"></script>
+<script>
+
+    $( document ).ready(function() {
+        $('#delete-token').click(function () {
+            deleteCookie('api_token');
+        });
+        $('form').on("submit", function(e) {
+            e.preventDefault();
+            sendForm($(this));
+        });
+
+        function sendForm($this) {
+            var url = $this.attr('action'),
+                form = $this,
+                data = form.serialize(),
+                method = $this.attr('method'),
+                _id = form.find('[name=_id]').val();
+
+            if(_id){
+                url = url+'/'+_id
+            }
+
+            console.log(url, form, method, data);
+            $.ajax({
+                type: method,
+                url: url,
+                data: data,
+                dataType: 'json',
+                cache: false,
+                headers: { 'Authorization': 'Bearier '+getCookie('api_token') },
+                success: function(data) {
+
+                    if (typeof data.token !== typeof undefined && data.token !== false && data.status === 'Ok') {
+                        setCookie('api_token', data.token, {expires:365});
+                    }
+                    showResponse(data, form);
+                },
+                error: function (error) {
+                    showResponse(error, form);
+                    console.log(error);
+                }
+            });
+        }
+
+        function showResponse(data, form) {
+
+            form.find('.json-out').show().jsonPresenter({
+                json: data
+            });
+        }
+
+        function getCookie(name) {
+            var matches = document.cookie.match(new RegExp(
+                "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+            ));
+            return matches ? decodeURIComponent(matches[1]) : undefined;
+        }
+
+        function setCookie(name, value, options) {
+            options = options || {};
+
+            var expires = options.expires;
+
+            if (typeof expires == "number" && expires) {
+                var d = new Date();
+                d.setTime(d.getTime() + expires*24*60*60 * 1000);
+                expires = options.expires = d;
+            }
+            if (expires && expires.toUTCString) {
+                options.expires = expires.toUTCString();
+            }
+
+            value = encodeURIComponent(value);
+
+            var updatedCookie = name + "=" + value;
+
+            for (var propName in options) {
+                updatedCookie += "; " + propName;
+                var propValue = options[propName];
+                if (propValue !== true) {
+                    updatedCookie += "=" + propValue;
+                }
+            }
+
+            document.cookie = updatedCookie;
+        }
+
+        function deleteCookie(name) {
+            setCookie(name, "", {
+                expires: -1
+            })
+        }
+
+    });
+</script>

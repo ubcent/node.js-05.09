@@ -223,6 +223,7 @@
             showAuthError: false,
             authErr: '',
             actionText: 'Please sign in',
+            token: '',
         },
         methods: {
             updateInfo() {
@@ -230,7 +231,8 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
-                    }
+                    },
+                    body: JSON.stringify({token: this.token})
                 })
                     .then(result => result.json())
                     .then(data => {
@@ -246,7 +248,10 @@
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({uniq_id: el.uniq_id})
+                    body: JSON.stringify({
+                        uniq_id: el.uniq_id,
+                        token: this.token
+                    })
                 })
                     .then(result => result.json())
                     .then(data => {
@@ -260,7 +265,10 @@
                         headers: {
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({currentContent: this.currentContent})
+                        body: JSON.stringify({
+                            currentContent: this.currentContent,
+                            token: this.token
+                        })
                     })
                         .then(result => result.json())
                         .then(data => {
@@ -282,6 +290,7 @@
                             uniq_id: el.uniq_id,
                             content: el.content,
                             done: el.done,
+                            token: this.token
                         }
                     )
                 })
@@ -316,6 +325,7 @@
                             this.user = '';
                             this.password = '';
                             this.actionText = 'User has been added, please sign in.';
+                            this.showAuthError = false;
                         });
                 };
             },
@@ -342,46 +352,67 @@
                         })
                         .then(data => {
                             if (data) {
-                                this.currentUser = data;
+                                console.log(data);
+                                this.currentUser = data.user;
                                 this.userAuthenticated = true;
                                 this.showAuthError = false;
                                 this.authErr = '';
                                 this.actionText = 'Please sign in';
+                                this.token = data.token;
+                                localStorage.setItem('token', data.token);
+                                localStorage.setItem('currentUser', data.user);
                                 this.updateInfo();
+                            } else {
+                                this.userAuthenticated = false;
+                                this.showAuthError = true;
+                                this.authErr = 'Incorrect password or username.';
                             }
                         });
                 }
             },
             logOut() {
-                return fetch('/logout', {
-                    method: "get",
-                })
-                    .then(result => result.json())
-                    .then(data => {
-                        if (data) {
-                            this.userAuthenticated = false;
-                        }
-                    });
+                localStorage.clear();
+                this.userAuthenticated = false;
             },
             checkAuth() {
                 return fetch('/islogin', {
-                    method: "get",
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(
+                        {
+                            token: this.token,
+                        }
+                    )
                 })
                     .then(result => result.json())
                     .then(data => {
                         if (data) {
                             this.userAuthenticated = true;
+                            this.currentUser = localStorage.getItem('currentUser');
                         } else {
                             this.userAuthenticated = false;
                         }
                     });
             },
+            getCurrentToken() {
+                const tokenFromLocalStorage = localStorage.getItem('token')
+                if (tokenFromLocalStorage) {
+                    this.token = tokenFromLocalStorage;
+                }
+            }
         },
         mounted() {
-            this.checkAuth();
-            if (!this.userAuthenticated) {
-                this.updateInfo();
-            }
+            this.getCurrentToken();
+            const checkAuth = new Promise((res, rej) => {
+                res(this.checkAuth());
+            });
+            checkAuth.then(() => {
+                if (this.userAuthenticated) {
+                    this.updateInfo();
+                }
+            })
         }
     });
 </script>
