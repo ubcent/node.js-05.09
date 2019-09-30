@@ -1,32 +1,16 @@
-const express       = require('express');
-const consolidate   = require('consolidate');
-const path          = require('path');
-const mongoose      = require('mongoose');
+require('./api');
 const session       = require('express-session');
 const MongoStore    = require('connect-mongo')(session);
+const init          = require('./init_server');
 
-const app = express();
-
-mongoose.connect('mongodb://localhost:27017/to-do', { useUnifiedTopology: true, useNewUrlParser: true });
+const app       = init.app;
+const mongoose  = init.mongoose;
 
 const Task      = require('./models/task');
 const User      = require('./models/user');
 const passport  = require('./auth');
 const flash     = require('connect-flash');
 
-//подключение шаблонизатора
-app.engine('twig', consolidate.twig);
-app.set('view engine', 'twig');
-app.set('views', path.resolve(__dirname, 'views'));
-
-//создание сервера
-app.listen(3000, () =>{
-    console.log('Сервер запущен по адресу: http://localhost:3000/');
-});
-
-app.use(express.urlencoded({
-    extended: true
-}));
 const authCheck = (req, res, next) => {
     if(req.user) {
         next();
@@ -44,6 +28,10 @@ app.use(session({
 app.use(passport.initialize);
 app.use(passport.session);
 
+app.get('/test-api', (req, res) => {
+    res.render('api');
+});
+
 app.get('/', (req, res) => {
 
     res.render('index',{
@@ -55,7 +43,7 @@ app.post('/', passport.authenticate);
 app.use('/tasks', authCheck);
 
 app.get('/tasks', async (req, res) => {
-    const tasks = await Task.find();
+    const tasks = await Task.find({user_id: req.user._id});
 
     res.render('tasks', {
         'tasks': tasks
@@ -63,7 +51,7 @@ app.get('/tasks', async (req, res) => {
 });
 
 app.post('/tasks', async (req, res) => {
-    const task = new Task(req.body);
+    const task = new Task({...req.body, ...{user_id: req.user._id}});
     const savedTask = await task.save();
 
     res.redirect('/tasks');
@@ -106,7 +94,6 @@ app.post('/register', async (req, res) => {
 
     res.redirect('/');
 });
-
 
 app.get('/logout', (req, res) => {
     req.logout();
