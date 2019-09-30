@@ -3,32 +3,41 @@ const path = require('path');
 const request = require('request');
 const cheerio = require('cheerio');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 
 const Task = require('./models/task');
 const User = require('./models/user');
+const passport = require('./modules/auth');
 
 //init
 const app = express();
 app.use(express.json());
-app.use(cors());
 
 mongoose.connect('mongodb://127.0.0.1:32768/task_db', {useNewUrlParser: true, useUnifiedTopology: true});
 
+app.use(session({
+    resave: true,
+    saveUninitialized: false,
+    secret: 'tasks test project',
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+}));
+
+app.use(passport.initialize);
+app.use(passport.session);
+
 const mustBeAutenticated = (req, res, next) => {
-    jwt.verify(req.body.token, 'My another homework rest api', (err, payload) => {
-             if (err) {
-                 res.send({ message: "Token doesn't exist"});
-             } else {
-                 next();
-             }
-         })
-     }
-
+    if (req.user) {
+        console.log(req.user);
+        console.log('hi');
+        next();
+    } else {
+        console.log('no');
+    }
+}
+a = /\/tasks_list.+/;
+console.log(a.test('/tasks_list/get_tasks/'));
 app.use(/\/tasks_list.+/, mustBeAutenticated);
-
 //end init
 
 //routing
@@ -52,14 +61,17 @@ app.get('/tasks_list', (req, res) => {
 //end routing
 
 //request
-app.post('/islogin', (req, res) => {
-    jwt.verify(req.body.token, 'My another homework rest api', (err, payload) => {
-        if (err) {
-            res.send(false);
-        } else {
-            res.send(true);
-        }
-    })
+app.get('/logout', (req, res) => {
+    req.logout();
+    res.send(true);
+});
+
+app.get('/islogin', (req, res) => {
+    if (req.user) {
+        res.send(true);
+    } else {
+        res.send(false);
+    }
 });
 
 app.post('/news', (req, res) => {
@@ -83,7 +95,9 @@ app.post('/news', (req, res) => {
 });
 
 app.post('/tasks_list/get_tasks', async (req, res) => {
+    console.log('here');
     const result = await Task.find();
+    console.log('sending tasks');
     res.send(result);
 });
 
@@ -103,9 +117,9 @@ app.post('/tasks_list/add', async (req, res) => {
     };
     Task.create(
         elToAdd
-    , (err, el) => {
-        res.send(el);
-    });
+        , (err, el) => {
+            res.send(el);
+        });
 
 });
 
@@ -138,31 +152,13 @@ app.post('/tasks_list/update', async (req, res) => {
 
 app.post('/register', async (req, res) => {
     const user = new User(req.body);
-    user.save();
+    const savedUser = user.save();
     res.send(true);
 });
 
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-    const user = await User.findOne({username});
-
-    if(!user) {
-        res.send(false);
-        return;
-    }
-
-    if(!user.comparePassword(password)) {
-        res.send(false);
-        return;
-    }
-
-    const plainUser = JSON.parse(JSON.stringify(user));
-    delete plainUser.password;
-
-    res.send({
-        token: jwt.sign(plainUser, 'My another homework rest api'),
-        user: plainUser.username
-    })
+app.post('/login', passport.authenticate, (req, res) => {
+    res.send(JSON.stringify(req.user.username));
+    console.log(req.user.username);
 });
 
 //end requests
@@ -170,5 +166,3 @@ app.post('/login', async (req, res) => {
 app.listen(8888, () => {
     console.log('Server has been started.');
 });
-
-
