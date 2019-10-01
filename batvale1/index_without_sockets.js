@@ -6,17 +6,12 @@ const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-const SocketIO = require('socket.io');
-const http = require('http');
-
 
 const Task = require('./models/task');
 const User = require('./models/user');
 
 //init
 const app = express();
-const server = http.Server(app);
-const io = SocketIO(server);
 app.use(express.json());
 app.use(cors());
 
@@ -171,14 +166,9 @@ app.post('/login', async (req, res) => {
 });
 
 //end requests
-io.on('connection', (socket) => {
-    socket.on('updateTaskList', async body => {
-        const tasks = await Task.find();
-        socket.broadcast.emit('updateTaskList', tasks);
-    });
+
+app.listen(8888, () => {
+    console.log('Server has been started.');
 });
 
-server.listen(8888, () => {
-    console.log("Server has been started");
-});
 
