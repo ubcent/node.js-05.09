@@ -6,6 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.0"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <script src="/socket.io/socket.io.js"></script>
     <style>
         #app {
             width: 700px;
@@ -224,6 +225,7 @@
             authErr: '',
             actionText: 'Please sign in',
             token: '',
+            socket: io.connect('http://localhost:8888'),
         },
         methods: {
             updateInfo() {
@@ -256,6 +258,7 @@
                     .then(result => result.json())
                     .then(data => {
                         this.tasks_list.splice(this.tasks_list.indexOf(el),1);
+                        this.socket.emit('updateTaskList');
                     });
             },
             addTask() {
@@ -273,6 +276,7 @@
                         .then(result => result.json())
                         .then(data => {
                             this.tasks_list.push(data);
+                            this.socket.emit('updateTaskList');
                         });
                 }
             },
@@ -296,7 +300,7 @@
                 })
                     .then(result => result.json())
                     .then(data => {
-
+                        this.socket.emit('updateTaskList');
                     });
             },
             toggleModal(el) {
@@ -401,6 +405,11 @@
                 if (tokenFromLocalStorage) {
                     this.token = tokenFromLocalStorage;
                 }
+            },
+            addListening() {
+                this.socket.on('updateTaskList', body => {
+                    this.updateInfo();
+                });
             }
         },
         mounted() {
@@ -412,9 +421,13 @@
                 if (this.userAuthenticated) {
                     this.updateInfo();
                 }
-            })
-        }
+            });
+            this.addListening();
+        },
     });
+</script>
+<script>
+
 </script>
 </body>
 </html>
