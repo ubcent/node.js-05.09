@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Socket.io example</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <ul id="messages"></ul>
+  <input type="text" id="author" placeholder="author" /><br/>
+  <input type="text" id="to" placeholder="room name" /><br/>
+  <textarea id="text" placeholder="message text"></textarea><br/>
+  <button id="send">Send</button><br/><br/>
+
+  <input type="text" id="roomName" placeholder="room name" />
+  <button id="join">Join</button>
+  <script>
+    const $messages = document.querySelector('#messages');
+    const $author = document.querySelector('#author');
+    const $text = document.querySelector('#text');
+    const $send = document.querySelector('#send');
+    const $to = document.querySelector('#to');
+    const $roomName = document.querySelector('#roomName');
+    const $join = document.querySelector('#join');
+
+    const socket = io.connect('http://localhost:8888/printers');
+
+    function renderMessage(message) {
+      const $li = document.createElement('li');
+      $li.textContent = `${message.author} (${message.created}): ${message.text}`;
+
+      $messages.appendChild($li);
+    }
+
+    fetch('/messages')
+      .then(response => response.json())
+      .then(messages => messages.forEach(renderMessage));
+
+    $send.addEventListener('click', () => {
+      socket.emit('message', {
+        author: $author.value,
+        text: $text.value,
+        to: $to.value,
+      });
+    });
+
+    $join.addEventListener('click', () => {
+      socket.emit('join', $roomName.value);
+    });
+
+    socket.on('message', renderMessage);
+  </script>
+</body>
+</html>

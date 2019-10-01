@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TODO-LIST</title>
+  <link rel="stylesheet" href="/css/lesson7.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>  
+</head>
+<body>
+    <div class="container" id="app">
+        <div class="header">
+            <h1>Приложение TODO-LIST</h1>
+        </div>
+        <div v-if="error" class="has-error">
+            {{error}}
+        </div>
+        <div v-if="!isAuthenticated">
+            <h2>Укажите свой логин и пароль</h2>
+            <div class="grid">
+                <div class="form-group">
+                    <input type="text" required="required" v-model="login"/>
+                    <label for="input" class="control-label">Логин ...</label><i class="bar"></i>
+                </div>
+                <div class="form-group">
+                    <input type="text" required="required" v-model="password"/>
+                    <label for="input" class="control-label">Пароль ...</label><i class="bar"></i>
+                </div>
+                <div class="button-container">
+                    <button type="button" class="button" v-on:click="auth"><span>Войти</span></button>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="isAuthenticated" >
+            <h3>Добрый день, {{login}}</h3>
+            <h3>Вот задачи, которые обязательно нужно выполнить:</h3>
+            <div v-for="task in tasks" class="grid">
+                    <div class="checkbox" >
+                        <label>
+                            <input type="checkbox" v-bind:checked="task.isCompleted" disabled = "disabled"/><i class="helper"></i>{{task.description}}
+                        </label>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="button" v-on:click="completeTask(task)"><span>Выполнено</span></button>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="button" v-on:click="uncompleteTask(task)"><span>Не выполнено</span></button>
+                    </div>
+                    <div class="button-container">
+                        <button type="button" class="button" v-on:click="deleteTask(task)"><span>Удалить</span></button>
+                    </div>
+            </div>
+
+            <h3>Добавить новую задачу</h3>
+            <div class="grid">
+                <div class="form-group">
+                    <input type="text" required="required" v-model="newtask_description"/>
+                    <label for="input" class="control-label">Описание задачи:</label><i class="bar"></i>
+                </div>
+                <div class="button-container">
+                    <button type="button" class="button" v-on:click="addTask"><span>Добавить задачу ...</span></button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div><h3>Завершить работу</h3></div>
+                <div class="button-container">
+                        <button type="button" class="button" v-on:click="logout"><span>Выход ...</span></button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+    var app = new Vue ({
+        el: '#app',
+        data: {
+            login: '',
+            password: '',
+            token: '',
+            isAuthenticated: false,
+            error: '',
+            tasks: [],
+            newtask_description: '',
+        },
+        methods: {
+            // Авторизация
+            auth: function () {
+                if (!this.login) {
+                    this.error = 'Поле "Логин" должно быть заполнено.';
+                    return;
+                }
+                if (!this.password) {
+                    this.error = 'Поле "Пароль" должно быть заполнено.';
+                    return;
+                }
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:7777/auth',
+                    responseType: 'json',
+                    data: {
+                        username: this.login,
+                        password: this.password
+                    }
+                })
+                .then( res => { 
+                    if (res.data.message !== undefined) {
+                        this.error = res.data.message;
+                        this.tasks = [];
+                        this.clearCredentials();
+                        return;
+                    }
+                    if (res.data.token !== undefined) {
+                        this.token = res.data.token;
+                        this.isAuthenticated = true;
+                        this.getTaskList();
+                    } else {
+                        this.error = 'Сервер не вернул токен для авторизации';
+                        this.tasks = [];
+                        this.clearCredentials();
+                    }
+                })
+                .catch( err => { this.error = err; })
+            },
+            // Запросить список задач
+            getTaskList: function () {
+                axios({
+                    method: 'get',
+                    url: 'http://localhost:7777/tasks',
+                    responseType: 'json',
+                    headers: {'Authorization': 'Bearer '+this.token},                    
+                })
+                .then( res => { 
+                    if (res.data.message !== undefined) {
+                        this.error = res.data.message;
+                        this.tasks = [];
+                        this.clearCredentials();
+                    } else {
+                        this.error = '';
+                        this.tasks = res.data; 
+                    }
+                })
+                .catch( err => { 
+                    this.error = err; 
+                    this.tasks = []; 
+                    this.clearCredentials();                })
+            },
+            // Запросить добавление задачи
+            addTask: function () {
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:7777/tasks',
+                    responseType: 'json',
+                    headers: {'Authorization': 'Bearer '+this.token},                    
+                    data: {
+                        description: this.newtask_description
+                    }
+                })
+                .then( res => { 
+                    if (res.data.message !== undefined) {
+                        this.error = res.data.message;
+                        this.tasks = [];
+                        this.clearCredentials();
+                        return;
+                    }
+                    this.tasks.push(res.data);
+                    this.newtask_description = '';
+                })
+                .catch( err => { this.error = err; })
+            },
+            // Запросить удаление задачи
+            deleteTask: function (task) {
+                axios({
+                    method: 'delete',
+                    url: 'http://localhost:7777/tasks/'+task._id,
+                    responseType: 'json',
+                    headers: {'Authorization': 'Bearer '+this.token},                    
+                })
+                .then( res => { 
+                    if (res.data.message !== undefined) {
+                        this.error = res.data.message;
+                        this.tasks = [];
+                        this.clearCredentials();
+                        return;
+                    }
+                    this.getTaskList();
+                })
+                .catch( err => { this.error = err; })
+            },
+            // Запросить завершение задачи
+            completeTask: function (task) {
+                axios({
+                    method: 'patch',
+                    url: 'http://localhost:7777/tasks/'+task._id,
+                    responseType: 'json',
+                    headers: {'Authorization': 'Bearer '+this.token},
+                    data: {
+                        isCompleted: true
+                    }
+                })
+                .then( res => { 
+                    if (res.data.message !== undefined) {
+                        this.error = res.data.message;
+                        this.tasks = [];
+                        this.clearCredentials();
+                        return;
+                    }
+                    this.getTaskList();
+                })
+                .catch( err => { this.error = err; })
+            },
+            // Запросить отмену завершения задачи
+            uncompleteTask: function (task) {
+                axios({
+                    method: 'patch',
+                    url: 'http://localhost:7777/tasks/'+task._id,
+                    responseType: 'json',
+                    headers: {'Authorization': 'Bearer '+this.token},
+                    data: {
+                        isCompleted: false
+                    }
+                })
+                .then( res => { 
+                    if (res.data.message !== undefined) {
+                        this.error = res.data.message;
+                        this.tasks = [];
+                        this.clearCredentials();
+                        return;
+                    }
+                    this.getTaskList();
+                })
+                .catch( err => { this.error = err; })
+            },
+            // Выйти
+            clearCredentials: function () {
+                this.login = '';
+                this.password = '';
+                this.isAuthenticated = false;
+            },
+            logout: function () {
+                this.clearCredentials();
+                this.error = '';
+            },
+        },
+    })
+    </script>
+</body>
+</html>
