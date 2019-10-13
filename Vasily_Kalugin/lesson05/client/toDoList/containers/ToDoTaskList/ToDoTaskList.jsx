@@ -8,19 +8,29 @@ import ChooseDateBtn from '~/toDoList/components/ChooseDateBtn/ChooseDateBtn.jsx
 import ToDoTask from '~/toDoList/components/ToDoTask/ToDoTask.jsx';
 import TaskCreator from '~/toDoList/components/TaskCreator/TaskCreator.jsx';
 
+import { changeToDoTask } from '~/toDoList/actions';
+
 class ToDoTaskList extends Component {
     constructor(props) {
         super(props);
     }
 
+    componentDidUpdate() {
+        this.props.toDoTaskList.forEach(task => {
+            if (new Date() > task.date && task.status === 'expected') {
+                this.props.dispatch(changeToDoTask({ ...task, status: 'failed' }));
+            }
+        });
+    }
+
     render() {
-        console.log(this.props.err);
+        // console.log('error: ', this.props.err);
         return (
             <Router>
                 <div className="todo-task-list">
-                    <CreateTaskBtn />
+                    <CreateTaskBtn newTaskId={this.props.newTaskId} />
                     <ChooseDateBtn date={this.props.selectedTasksDate} />
-                    {this.props.mutableItem.id === 'newTask' ? <TaskCreator /> : null}
+                    {/newTask/.test(this.props.mutableItem.id) ? <TaskCreator /> : null}
                     {this.props.toDoTaskList.map(toDoTask => {
                         let result = <ToDoTask key={toDoTask.id} {...toDoTask} />;
 

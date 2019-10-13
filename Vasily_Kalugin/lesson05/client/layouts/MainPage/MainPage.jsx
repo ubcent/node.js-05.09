@@ -7,9 +7,9 @@ import ToDoTaskList from '~/toDoList/containers/ToDoTaskList/ToDoTaskList.jsx';
 function MainPage() {
     return (
         <Router>
-            <Redirect to="/task" />
+            <Redirect to="/tasks" />
             <div className="main-page">
-                <Route path="/task" component={ToDoTaskList} />
+                <Route path="/tasks" component={ToDoTaskList} />
             </div>
         </Router>
     );

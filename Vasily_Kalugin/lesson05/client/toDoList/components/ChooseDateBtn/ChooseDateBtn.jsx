@@ -20,26 +20,36 @@ class DatePickerCustomInput extends Component {
     }
 }
 
-function getToDoTasksForDateAction(props, date) {
-    props.dispatch(getToDoTasksForDate(date));
-}
+class ChooseDateBtn extends Component {
+    constructor(props) {
+        super(props);
+    }
 
-function ChooseDateBtn(props) {
-    return (
-        <div className="todo__choose-date-btn">
-            <DatePicker
-                selected={props.date}
-                onChange={date => getToDoTasksForDateAction(props, date)}
-                dateFormat="dd.MM.yyyy"
-                withPortal
-                peekNextMonth
-                showMonthDropdown
-                showYearDropdown
-                dropdownMode="select"
-                customInput={<DatePickerCustomInput />}
-            />
-        </div>
-    );
+    getToDoTasksForDateAction(date) {
+        this.props.dispatch(getToDoTasksForDate(date));
+    }
+
+    render() {
+        return (
+            <div className="todo__choose-date-btn">
+                <DatePicker
+                    selected={this.props.date}
+                    onChange={date => this.getToDoTasksForDateAction(date)}
+                    dateFormat="dd.MM.yyyy"
+                    withPortal
+                    peekNextMonth
+                    showMonthDropdown
+                    showYearDropdown
+                    dropdownMode="select"
+                    customInput={<DatePickerCustomInput />}
+                />
+            </div>
+        );
+    }
+
+    componentDidMount() {
+        this.getToDoTasksForDateAction(this.props.date);
+    }
 }
 
 export default connect()(ChooseDateBtn);

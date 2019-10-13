@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { createToDoTask, changeToDoTask } from '~/toDoList/actions';
 
 function changeToDoTaskAction(props) {
-    if (props.id === 'newTask') {
+    if (/newTask/.test(props.id)) {
         props.dispatch(createToDoTask(props));
     } else {
         props.dispatch(changeToDoTask(props));

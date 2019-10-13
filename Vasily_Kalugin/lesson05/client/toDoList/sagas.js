@@ -16,7 +16,7 @@ import {
     GET_TODO_TASKS_FOR_DATE_REJECTED,
 } from './actionTypes';
 import { call, put, fork, takeEvery, takeLatest } from 'redux-saga/effects';
-import { rootURL, fetch } from '~/api.js';
+import { rootURL, fetchData } from '~/api.js';
 
 const URL = `${rootURL}/tasks`;
 const fetchParam = {
@@ -30,22 +30,28 @@ const fetchParam = {
 function* createToDoTask(action) {
     try {
         const param = { ...fetchParam };
-        param.body = action;
+        param.body = JSON.stringify(action);
 
-        const response = yield call(fetch, URL, param);
+        const response = yield call(fetchData, URL, param);
 
-        if (response instanceof Error) {
-            throw response;
+        if (response.err) {
+            throw new Error(response.err);
         }
 
         yield put({
             type: CREATE_TODO_TASK_FULFILLED,
-            payload: response,
+            payload: {
+                id: action.payload.id,
+                newId: response,
+            },
         });
     } catch (err) {
         yield put({
             type: CREATE_TODO_TASK_REJECTED,
-            payload: err,
+            payload: {
+                id: action.payload.id,
+                err,
+            },
         });
     }
 }
@@ -54,22 +60,25 @@ function* createToDoTask(action) {
 function* changeToDoTask(action) {
     try {
         const param = { ...fetchParam };
-        param.body = action;
+        param.body = JSON.stringify(action);
 
-        const response = yield call(fetch, URL, param);
+        const response = yield call(fetchData, URL, param);
 
-        if (response instanceof Error) {
-            throw response;
+        if (response.err) {
+            throw new Error(response.err);
         }
 
         yield put({
             type: CHANGE_TODO_TASK_FULFILLED,
-            payload: action.payload,
+            payload: response,
         });
     } catch (err) {
         yield put({
             type: CHANGE_TODO_TASK_REJECTED,
-            payload: err,
+            payload: {
+                id: action.payload.id,
+                err,
+            },
         });
     }
 }
@@ -78,22 +87,25 @@ function* changeToDoTask(action) {
 function* doneToDoTask(action) {
     try {
         const param = { ...fetchParam };
-        param.body = action;
+        param.body = JSON.stringify(action);
 
-        const response = yield call(fetch, URL, param);
+        const response = yield call(fetchData, URL, param);
 
-        if (response instanceof Error) {
-            throw response;
+        if (response.err) {
+            throw new Error(response.err);
         }
 
         yield put({
             type: DONE_TODO_TASK_FULFILLED,
-            payload: action.payload,
+            payload: response,
         });
     } catch (err) {
         yield put({
             type: DONE_TODO_TASK_REJECTED,
-            payload: err,
+            payload: {
+                id: action.payload,
+                err,
+            },
         });
     }
 }
@@ -102,22 +114,25 @@ function* doneToDoTask(action) {
 function* deleteToDoTask(action) {
     try {
         const param = { ...fetchParam };
-        param.body = action;
+        param.body = JSON.stringify(action);
 
-        const response = yield call(fetch, URL, param);
+        const response = yield call(fetchData, URL, param);
 
-        if (response instanceof Error) {
-            throw response;
+        if (response.err) {
+            throw new Error(response.err);
         }
 
         yield put({
             type: DELETE_TODO_TASK_FULFILLED,
-            payload: action.payload,
+            payload: response,
         });
     } catch (err) {
         yield put({
             type: DELETE_TODO_TASK_REJECTED,
-            payload: err,
+            payload: {
+                id: action.payload,
+                err,
+            },
         });
     }
 }
@@ -126,9 +141,9 @@ function* deleteToDoTask(action) {
 function* getToDoTasksForDate(action) {
     try {
         const param = { ...fetchParam };
-        param.body = action;
+        param.body = JSON.stringify(action);
 
-        const response = yield call(fetch, URL, param);
+        const response = yield call(fetchData, URL, param);
 
         if (response instanceof Error) {
             throw response;

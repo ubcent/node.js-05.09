@@ -10,19 +10,17 @@ import {
 } from './actionTypes';
 
 // создать новое задание
-export function createToDoTask({ date, taskText }) {
+export function createToDoTask({ id, date, taskText }) {
     const status = date > new Date() ? 'expected' : 'failed';
 
     return {
         type: CREATE_TODO_TASK,
-        payload: { date, taskText, status },
+        payload: { id, date, taskText, status },
     };
 }
 
 // изменить выбранное задание
-export function changeToDoTask({ id, date, taskText }) {
-    const status = date > new Date() ? 'expected' : 'failed';
-
+export function changeToDoTask({ id, date, taskText, status }) {
     return {
         type: CHANGE_TODO_TASK,
         payload: { id, date, taskText, status },

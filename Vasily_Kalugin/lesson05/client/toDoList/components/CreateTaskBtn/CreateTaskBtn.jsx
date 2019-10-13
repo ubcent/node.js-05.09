@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { setMutableItemId } from '~/toDoList/actions';
 
 function setMutableItemIdAction(props) {
-    props.dispatch(setMutableItemId('newTask'));
+    props.dispatch(setMutableItemId(props.newTaskId));
 }
 
 function CreateTaskBtn(props) {
