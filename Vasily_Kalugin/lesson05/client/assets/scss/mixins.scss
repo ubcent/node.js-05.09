@@ -2,7 +2,7 @@
 
 @mixin todo-button {
     border: none;
-    border-radius: 8px;
+    border-radius: rem(8);
     color: #fff;
     cursor: pointer;
     font-size: rem(16);
@@ -24,4 +24,11 @@
     flex: 0 0 45%;
     height: rem(30);
     margin-bottom: rem(5);
+}
+
+@mixin todo-task-text {
+    box-sizing: border-box;
+    flex: 0 0 100%;
+    font-size: rem(22);
+    padding: 0 rem(10);
 }

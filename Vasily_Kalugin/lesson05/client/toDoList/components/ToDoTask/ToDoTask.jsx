@@ -41,7 +41,7 @@ function ToDoTask(props) {
             {setStatusImg(props.status)}
             <p className="todo-task__time">{getFormatTime(props.date)}</p>
             <TaskDeleteBtn id={props.id} />
-            <TaskChangeBtn {...props} />
+            <TaskChangeBtn id={props.id} />
             <TaskDoneBtn id={props.id} />
             <p className="todo-task__text">{props.taskText}</p>
         </div>

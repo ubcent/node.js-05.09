@@ -27,10 +27,7 @@
     }
 
     &__text {
-        box-sizing: border-box;
-        flex: 0 0 100%;
-        font-size: rem(22);
+        @include todo-task-text;
         margin: rem(15) 0;
-        padding: 0 rem(10);
     }
 }

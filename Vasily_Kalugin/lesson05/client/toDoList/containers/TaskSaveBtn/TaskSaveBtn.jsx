@@ -2,13 +2,13 @@ import './TaskSaveBtn.scss';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { createToDoTask, changeToDoTask } from '../../actions';
+import { createToDoTask, changeToDoTask } from '~/toDoList/actions';
 
 function changeToDoTaskAction(props) {
-    if (props.id) {
-        props.dispatch(changeToDoTask(props));
-    } else {
+    if (/newTask/.test(props.id)) {
         props.dispatch(createToDoTask(props));
+    } else {
+        props.dispatch(changeToDoTask(props));
     }
 }
 

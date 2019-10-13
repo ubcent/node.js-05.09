@@ -1,11 +1,8 @@
 @import '~/assets/scss/resources.scss';
 
 .task-creator__task-text-input {
-    border-radius: 8px;
-    box-sizing: border-box;
-    flex: 0 0 100%;
+    @include todo-task-text;
+    border-radius: rem(8);
     font-family: 'Metronic Pro Air', sans-serif;
-    font-size: rem(22);
     margin: rem(13) 0;
-    padding: 0 rem(10);
 }

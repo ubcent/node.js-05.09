@@ -1,10 +1,25 @@
 const express = require('express');
-
 const app = express();
-const PORT = process.env.PORT || 3001;
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
 
-app.use(express.static('build'));
+mongoose.connect('mongodb://localhost:27017/VAKTasks', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+});
 
-app.listen(PORT, () => {
-    console.log(`Server listening on: ${PORT}`);
+const taskRouter = require('./server/routes/tasks');
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.resolve(__dirname, 'build')));
+
+app.use('/tasks', taskRouter);
+
+server.listen(8080, () => {
+    console.log('Server listening on: 8080');
 });

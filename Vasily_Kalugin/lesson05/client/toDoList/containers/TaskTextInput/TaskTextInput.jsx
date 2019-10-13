@@ -2,10 +2,10 @@ import './TaskTextInput.scss';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { setMutableTaskText } from '../../actions';
+import { setMutableItemTaskText } from '~/toDoList/actions';
 
-function setMutableTaskTextAction(props, taskText) {
-    props.dispatch(setMutableTaskText(taskText));
+function setMutableItemTaskTextAction(props, taskText) {
+    props.dispatch(setMutableItemTaskText(taskText));
 }
 
 function TaskTextInput(props) {
@@ -15,7 +15,7 @@ function TaskTextInput(props) {
             type="text"
             placeholder="Input task text"
             value={props.taskText}
-            onChange={event => setMutableTaskTextAction(props, event.target.value)}
+            onChange={event => setMutableItemTaskTextAction(props, event.target.value)}
         ></input>
     );
 }

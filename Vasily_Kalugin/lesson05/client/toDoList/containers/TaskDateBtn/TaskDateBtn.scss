@@ -1,6 +1,6 @@
 @import '~/assets/scss/resources.scss';
 
-.task-creator__task-date-btn {
+.task-creator__custom-date-btn {
     @include todo-button;
     @include todo-task-button;
     flex: 1 0 100%;
@@ -12,7 +12,7 @@
     }
 }
 
-.react-datepicker__input-container {
-    display: flex!important;
-    height: rem(25);
+.task-creator__task-date-btn {
+    flex: 0 0 35%;
+    min-width: rem(200);
 }
